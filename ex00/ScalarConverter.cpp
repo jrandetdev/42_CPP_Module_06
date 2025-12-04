@@ -1,7 +1,9 @@
 #include "ScalarConverter.hpp"
-#include <string>
 #include <iostream>
+#include <string>
 #include <limits>
+#include <cstring>
+#include <cstdlib>
 
 ScalarConverter::ScalarConverter() {}
 
@@ -12,10 +14,17 @@ ScalarConverter& ScalarConverter::operator=(const ScalarConverter& other) {
 	return(*this);
 }
 
+void	Parser(const char* stringLiteral) {
+	
+
+}
+
 ScalarConverter::~ScalarConverter() {}
 
-void	convert(const std::string& literal)
+void	ScalarConverter::convert(const char* stringLiteral)
 {
-	char char_result = static_cast<char>(literal);
-	std::cout << 
+
+	
+	
+	return ;
 }
