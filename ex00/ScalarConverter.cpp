@@ -49,43 +49,67 @@ void convert_values(t_result *r, float f)
 
 ScalarConverter::~ScalarConverter() {}
 
-void	Parser(const char* input, t_result *r) {
-	printf("%s\n", input);
-	//int i = 0;
-	std::cout << "entered the parser function" << std::endl;
-	if (input[0] == '\'' && isalpha(input[1]) && input[2] == '\'' && isprint(input[1])) {
-		std::cout << "enters the char function" << std::endl;
-		r->type = CHAR; 
+void	setType(const char* input, t_result *r) {
+
+	size_t	len = std::strlen(input);
+	r->type = INVALID;
+	if (len == 0)
 		return ;
-	}
-	if (isdigit(input[0]) && std::strlen(input) == 1) {
-		r->type = INT;
-		return;
+
+	// Preliminary check for a char (TIP first check the len to avoid the case of segfault)
+	if (len == 3 && input[0] == '\'' && input[2] == '\'') {
+		if (isprint(input[1]))
+		{
+			std::cout << "enters the char function" << std::endl;
+			r->type = CHAR;
+			return ;
+		}
 	}
 
-	// while (input[i] && !(isspace(input[i])))
-	// 	i++;
-	// if (input[i] == '\0') {
-	// 	 r->type = INVALID; return ; }
-	// while (input[i] == '+' || input[i] == '-')
-	// 	i++;
-	// std::cout << "finished checks" << input << std::endl;
+	char	*end = NULL;
+	if (len > 0 && input[len - 1] == 'f')
+	{
+		std::strtof(input, &end);
+		if (*end != NULL)
+			r->type = FLOAT;
+		return ;
+	}
+
+	if (len > 0 && std::strchr(input, '.') != NULL)
+	{
+		std::strtod(input, &end);
+		if (*end != NULL)
+			r->type = DOUBLE;
+		return ;
+	}
+
+	if (len > 0 && )
+
 	return ;
 }
 
 void	ScalarConverter::convert(const char* input)
 {
 	t_result r;
-	r.type = INVALID;
-	Parser(input, &r);
+	setType(input, &r);
 	if (r.type == CHAR) {
 		std::cout << "entered the CHAR conversion" << std::endl;
 		convert_values(&r, input[1]);
 	}
-	if (r.type == INT)
+	// if (r.type == INT)
+	// {
+	// 	std::cout << "entered the INT conversion" << std::endl;
+	// 	convert_values(&r, atoi(input));
+	// }
+	if (r.type == FLOAT)
 	{
-		std::cout << "entered the INT conversion" << std::endl;
-		convert_values(&r, atoi(input));
+		std::cout << "entered the float conversion" << std::endl;
+		convert_values(&r, atof(input));
+	}
+	if (r.type == DOUBLE)
+	{
+		std::cout << "entered the float conversion" << std::endl;
+		convert_values(&r, atof(input));
 	}
 	if (r.type == INVALID) {
 		std::cout << "Error! Invalid literal type, cannot convert. Correct types needed:" \

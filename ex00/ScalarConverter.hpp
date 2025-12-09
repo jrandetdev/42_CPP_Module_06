@@ -33,6 +33,6 @@ class ScalarConverter
 		static void	convert(const char* input);
 };
 
-void	Parser(const char* stringLiteral, t_result *r);
+void	setType(const char* stringLiteral, t_result *r);
 
 #endif
