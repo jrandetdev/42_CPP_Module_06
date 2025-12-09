@@ -36,7 +36,10 @@ t_result convert_values(int i)
 
 t_result convert_values(double d)
 {
-
+	return t_result {
+		.value.c = static_cast<char>(i),
+		.v
+	}
 }
 
 t_result convert_values(float f)
