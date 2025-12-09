@@ -14,65 +14,81 @@ ScalarConverter& ScalarConverter::operator=(const ScalarConverter& other) {
 	return(*this);
 }
 
-t_result convert_values(char c)
+void convert_values(t_result *r, char c)
 {
-	return (t_result) {
-		.value.c = c,
-		.value.i = static_cast<int>(c),
-		.value.d = static_cast<double>(c),
-		.value.f = static_cast<float>(c),
-	};
+	std::cout << "detected CHAR, inside the char convert function" << '\n';
+	r->value.c = c;
+	r->value.i = static_cast<int>(c);
+	r->value.d = static_cast<double>(c);
+	r->value.f = static_cast<float>(c);
 }
 
-t_result convert_values(int i)
+void convert_values(t_result *r, int i)
 {
-	return t_result {
-		.value.c = static_cast<char>(i),
-		.value.i = i,
-		.value.d = static_cast<double>(i),
-		.value.f = static_cast<float>(i),
-	};
+	r->value.c = static_cast<char>(i);
+	r->value.i = i;
+	r->value.d = static_cast<double>(i);
+	r->value.f = static_cast<float>(i);
 }
 
-t_result convert_values(double d)
+void convert_values(t_result *r, double d)
 {
-	return t_result {
-		.value.c = static_cast<char>(d),
-		.value.i = static_cast<int>(d),
-		.value.d = d,
-		.value.f = static_cast<float>(d),
-	};
+	r->value.c = static_cast<char>(d);
+	r->value.i = static_cast<int>(d);
+	r->value.d = d;
+	r->value.f = static_cast<float>(d);
 }
 
-t_result convert_values(float f)
+void convert_values(t_result *r, float f)
 {
-		return t_result {
-		.value.c = static_cast<char>(f),
-		.value.i = static_cast<int>(f),
-		.value.d = static_cast<double>(f),
-		.value.f = f,
-	};
-}
-
-void	Parser(const char* input, t_result *r) {
-	// if the len is 1 then it can only be a char of an int
-
-	if (input[0] == '\'' && isalpha(input[1]) && input[1] == '\'' && isprint(input[1])) {
-		r->type = CHAR; return ;
-	}
-	return ;
+	r->value.c = static_cast<char>(f);
+	r->value.i = static_cast<int>(f);
+	r->value.d = static_cast<double>(f);
+	r->value.f = f;
 }
 
 ScalarConverter::~ScalarConverter() {}
 
+void	Parser(const char* input, t_result *r) {
+	printf("%s\n", input);
+	//int i = 0;
+	std::cout << "entered the parser function" << std::endl;
+	if (input[0] == '\'' && isalpha(input[1]) && input[2] == '\'' && isprint(input[1])) {
+		std::cout << "enters the char function" << std::endl;
+		r->type = CHAR; 
+		return ;
+	}
+	if (isdigit(input[0]) && std::strlen(input) == 1) {
+		r->type = INT;
+		return;
+	}
+
+	// while (input[i] && !(isspace(input[i])))
+	// 	i++;
+	// if (input[i] == '\0') {
+	// 	 r->type = INVALID; return ; }
+	// while (input[i] == '+' || input[i] == '-')
+	// 	i++;
+	// std::cout << "finished checks" << input << std::endl;
+	return ;
+}
+
 void	ScalarConverter::convert(const char* input)
 {
 	t_result r;
+	r.type = INVALID;
 	Parser(input, &r);
-	if (r.type = CHAR)
-	{
-		convert_values(input[1]);
+	if (r.type == CHAR) {
+		std::cout << "entered the CHAR conversion" << std::endl;
+		convert_values(&r, input[1]);
 	}
-	
+	if (r.type == INT)
+	{
+		std::cout << "entered the INT conversion" << std::endl;
+		convert_values(&r, atoi(input));
+	}
+	if (r.type == INVALID) {
+		std::cout << "Error! Invalid literal type, cannot convert. Correct types needed:" \
+			" char (./scalarconvert \"\'a\'\"), int, double, or float." << std::endl; }
 	return ;
 }

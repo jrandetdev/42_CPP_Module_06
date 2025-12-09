@@ -6,7 +6,7 @@
 #include <limits>
 #include <cstdlib>
 
-enum Type { CHAR, INT, DOUBLE, FLOAT, IMPOSSIBLE };
+enum Type { CHAR, INT, DOUBLE, FLOAT, INVALID };
 
 union Value
 {
@@ -30,7 +30,7 @@ class ScalarConverter
 		ScalarConverter& operator=(const ScalarConverter& other);
 		virtual ~ScalarConverter();
 	public:
-		static void convert(const char* stringLiteral);
+		static void	convert(const char* input);
 };
 
 void	Parser(const char* stringLiteral, t_result *r);
