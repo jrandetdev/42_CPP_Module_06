@@ -41,13 +41,51 @@ double: 42.0
 
 ---
 
-## Recap on Literals because apparently I forgot. *sigh*
+## Why conversions are needed and introduction to implicit conversion
 
-Literals are fundemental elements used to represent fixed values. They can include numbers, characters, strings, and more.
+The value of an object is stored as a sequence of bits. The data type of the object will tell the compiler how it should interpret those bits into meaningful values.
 
-There are 5 types of literals:
-- Integer literals --> in this excercise, we use decimal representation and not another base like hexadecimal etc.
-- Floating-point literals
-- Character literals
-- String literals (I guess this is the one I will use)
-- Boolean literals 
+They are stored differently. For example, the integer value 3 might be stored as binary 0000 0000 0000 0000 0000 0000 0000 0011, whereas floating point value 3.0 might be stored as binary 0100 0000 0100 0000 0000 0000 0000 0000.
+
+Explicit casts occur when the compiler converts from one data type to another without any data loss risk. For example I have an int and I want to convert it to a double: it is possible. 
+
+We could want to be explicit and do 
+
+```cpp
+double value = 5.25;
+int a = (int)value; // this will truncate the value (c style cast)
+```
+
+If the conversion cannot work, the compiler will produce a compile error. 
+
+Narrowing conversions --> when the destination type could not hold the values of the source type (truncation)
+
+ex: float to int, int to float, int to short, 
+
+Narrowing conversions should be avoided but sometimes you still have to do an explicit conversion with a cast for function calls where the function parameters and argument may hve mistmatch tyoes. 
+
+## Explicit casting
+
+When we need to explicitly state that we are using a narrowing conversion, we use a static cast.
+
+It doesn't do anything that C-style cast can't do. The conversion is a successful type conversion, but it adds synthax "sugar" to your code. 
+
+It's a way to say that a static cast is actually a static cast, reinterpret cast is a type puning technique whereby you reinterpret the memory, const cast: I'm removing the constness of this value (making your actions explicit)
+
+The different types of casts:
+- static_cast : performs compile-time type conversions between related types
+- dynamic_cast : Performs runtime type conversions on pointers or references in a polymorphism hierarchy (inheritance)
+- const_cast : Adds or removes const
+- C-style casts : performs a combination of all 3 listed above and is just not explicit.
+
+C-style casting is done with the operator() and the name of the type used to convert is in the paranethesis. The issue is that it can perform a variety of different actions "under the hood", which can make the code more difficult to understand. 
+
+It performs the following in order:
+- const_cast
+- static_cast
+- static_cast, followed by const_cast
+- reinterpret_cast
+- reinterpret_cast, followed by const_cast
+
+
+Casting an int into a char is potentially unsade (the compiler cannot tell whether the integer value will overflow the range of the char or not). To contour the error, we use static cast, which explicitly tells the compiler that this conversion is intended, and that we accept the responsibility for the consequences. 
