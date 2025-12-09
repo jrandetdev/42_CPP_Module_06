@@ -37,24 +37,28 @@ t_result convert_values(int i)
 t_result convert_values(double d)
 {
 	return t_result {
-		.value.c = static_cast<char>(i),
-		.v
-	}
+		.value.c = static_cast<char>(d),
+		.value.i = static_cast<int>(d),
+		.value.d = d,
+		.value.f = static_cast<float>(d),
+	};
 }
 
 t_result convert_values(float f)
 {
-
+		return t_result {
+		.value.c = static_cast<char>(f),
+		.value.i = static_cast<int>(f),
+		.value.d = static_cast<double>(f),
+		.value.f = f,
+	};
 }
 
 void	Parser(const char* input, t_result *r) {
 	// if the len is 1 then it can only be a char of an int
-	for (int i = 0; input[i]; ++i)
-	{
-		if (input[0] == '\'' && isalpha(input[1]) && input[1] == '\'' && isprint(input[1])) {
-			r->type = CHAR; return ;
-		}
 
+	if (input[0] == '\'' && isalpha(input[1]) && input[1] == '\'' && isprint(input[1])) {
+		r->type = CHAR; return ;
 	}
 	return ;
 }
@@ -67,7 +71,7 @@ void	ScalarConverter::convert(const char* input)
 	Parser(input, &r);
 	if (r.type = CHAR)
 	{
-		convert_to_values(input[1]);
+		convert_values(input[1]);
 	}
 	
 	return ;
