@@ -95,18 +95,20 @@ Casting an int into a char is potentially unsade (the compiler cannot tell wheth
 
 ## My strategy for the excercise 
 
-I used a **discriminated union struct** as such:
+I used an approach with a result struct containing:
+- an enum with the different types
+- a struct containing the different values for the types. This is where I will perform the static casts.
 
 ```cpp
 enum Type { CHAR, INT, DOUBLE, FLOAT, IMPOSSIBLE };
 
-union Value
+typedef struct t_value
 {
 	char	c;
 	int		i;
 	double	d;
 	float	f;
-};
+}				s_value;
 
 typedef struct	s_result
 {
@@ -115,12 +117,14 @@ typedef struct	s_result
 }				t_result;
 ```
 
-The union will be of the size of the biggest data type (8 bits) and the Enum is with 4 ints, so 16 bytes total. 
-
 The goal was to:
 1. First parse the input, find the data type through getType function and store it in the Type part of the struct.
 2. Then according to the Type found (CHAR, INT, DOUBLE, FLOAT, or IMPOSSIBLE), I use functions like atoi, atof, etc and convert it into its corresponding type.
 3. Finally, I overloaded a function called convert_values and it's different versions will be called depending on what I send to the function.
-4. Finally, I output it. 
+4. Finally, I output it by using an overload of the ostream operator <<
 
-This is the "cleanest" method I found, although I am not 100% satisfied with the if else chain.  
+This is the "cleanest" method I found so far. 
+
+## NOTE
+
+I needed to use std::fixed and std::setprecision(1) for the output of the double and float. (wink wink to the previous excercise)

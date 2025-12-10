@@ -1,8 +1,9 @@
 #include "ScalarConverter.hpp"
+
 static void convert_values(t_result *r, char c);
 static void convert_values(t_result *r, int i);
 static void convert_values(t_result *r, double d);
-//static void convert_values(t_result *r, float f);
+static void convert_values(t_result *r, float f);
 static void	setType(const char* input, t_result *r);
 
 ScalarConverter::ScalarConverter() {}
@@ -22,22 +23,22 @@ t_result	ScalarConverter::convert(const char* input)
 	setType(input, &r);
 	//char *endptr;
 	if (r.type == CHAR) {
-		std::cout << "entered the CHAR conversion" << std::endl;
+		// std::cout << "entered the CHAR conversion" << std::endl;
 		convert_values(&r, input[1]);
 	}
 	else if (r.type == INT)
 	{
-		std::cout << "entered the INT conversion" << std::endl;
+		// std::cout << "entered the INT conversion" << std::endl;
 		convert_values(&r, atoi(input));
 	}
 	else if (r.type == FLOAT)
 	{
-		std::cout << "entered the FLOAT conversion" << std::endl;
-		convert_values(&r, atof(input));
+		// std::cout << "entered the FLOAT conversion" << std::endl;
+		convert_values(&r, std::strtof(input, NULL));
 	}
 	else if (r.type == DOUBLE)
 	{
-		std::cout << "entered the DOUBLE conversion" << std::endl;
+		// std::cout << "entered the DOUBLE conversion" << std::endl;
 		convert_values(&r, atof(input));
 	}
 	else if (r.type == INVALID) {
@@ -98,7 +99,7 @@ static void convert_values(t_result *r, char c)
 
 static void convert_values(t_result *r, int i)
 {
-	std::cout << "entered the int convert values function" << '\n';
+	// std::cout << "entered the int convert values function" << '\n';
 	r->value.c = static_cast<char>(i);
 	r->value.i = i;
 	r->value.d = static_cast<double>(i);
@@ -113,23 +114,22 @@ static void convert_values(t_result *r, double d)
 	r->value.f = static_cast<float>(d);
 }
 
-// static void convert_values(t_result *r, float f)
-// {
-// 	r->value.c = static_cast<char>(f);
-// 	r->value.i = static_cast<int>(f);
-// 	r->value.d = static_cast<double>(f);
-// 	r->value.f = f;
-// }
-
+static void convert_values(t_result *r, float f)
+{
+	r->value.c = static_cast<char>(f);
+	r->value.i = static_cast<int>(f);
+	r->value.d = static_cast<double>(f);
+	r->value.f = f;
+}
 
 std::ostream& operator<<(std::ostream& outstream, t_result r)
 {
 	if (isprint(r.value.c))
-		outstream << "char: " << r.value.c << '\n';
+		outstream << "char:\t" << r.value.c << '\n';
 	else
-		outstream << "char is not printable" << '\n';
-	outstream << "int: " << r.value.i << '\n' \
-	<< "double: " << r.value.d << '\n' \
-	<< "float: " << r.value.f << '\n';
+		outstream << "char:\tNon displayable." << '\n';
+	outstream << "int:\t" << r.value.i << '\n' \
+	<< "double:\t" << std::fixed << std::setprecision(1) << r.value.d << '\n' \
+	<< "float:\t" << std::fixed << std::setprecision(1) << r.value.f << "f\n";
 	return outstream;
 }

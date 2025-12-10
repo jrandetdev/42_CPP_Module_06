@@ -2,12 +2,14 @@
 # define SCALARCONVERTER_HPP
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <limits>
 #include <cstring>
 #include <cstdlib>
 #include <inttypes.h>
 #include <sstream>
+#include <cmath>
 
 enum Type { CHAR, INT, DOUBLE, FLOAT, INVALID };
 

@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 	if (isSpecialCase(argv[1]))
 		exit(1);
 	t_result r;
-	std::cout << "the address of r in the main is " << &r.value << std::endl;
+	// std::cout << "the address of r in the main is " << &r.value << std::endl;
 	r = ScalarConverter::convert(argv[1]);
 	if (r.type == INVALID)
 		exit(1);
