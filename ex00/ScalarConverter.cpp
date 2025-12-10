@@ -4,6 +4,7 @@
 #include <limits>
 #include <cstring>
 #include <cstdlib>
+#include <inttypes.h>
 
 ScalarConverter::ScalarConverter() {}
 
@@ -60,31 +61,34 @@ void	setType(const char* input, t_result *r) {
 	if (len == 3 && input[0] == '\'' && input[2] == '\'') {
 		if (isprint(input[1]))
 		{
-			std::cout << "enters the char function" << std::endl;
 			r->type = CHAR;
 			return ;
 		}
 	}
 
 	char	*end = NULL;
-	if (len > 0 && input[len - 1] == 'f')
+	if (input[len - 1] == 'f')
 	{
 		std::strtof(input, &end);
-		if (*end != NULL)
+		if (*end == 'f' && *(end + 1) == '\0')
 			r->type = FLOAT;
 		return ;
 	}
 
-	if (len > 0 && std::strchr(input, '.') != NULL)
+	if (std::strchr(input, '.') != NULL)
 	{
 		std::strtod(input, &end);
-		if (*end != NULL)
+		if (*end == '\0') // Good this means it consumed the entire string
 			r->type = DOUBLE;
 		return ;
 	}
 
-	if (len > 0 && )
+	errno = 0;
+	std::strtol(input, &end, 10);
+	if (*end == '\0') // Good this means it consumed the entire string
+		r->type = INT;
 
+	if (*end )
 	return ;
 }
 
@@ -96,19 +100,19 @@ void	ScalarConverter::convert(const char* input)
 		std::cout << "entered the CHAR conversion" << std::endl;
 		convert_values(&r, input[1]);
 	}
-	// if (r.type == INT)
-	// {
-	// 	std::cout << "entered the INT conversion" << std::endl;
-	// 	convert_values(&r, atoi(input));
-	// }
+	if (r.type == INT)
+	{
+		std::cout << "entered the INT conversion" << std::endl;
+		convert_values(&r, atoi(input));
+	}
 	if (r.type == FLOAT)
 	{
-		std::cout << "entered the float conversion" << std::endl;
+		std::cout << "entered the FLOAT conversion" << std::endl;
 		convert_values(&r, atof(input));
 	}
 	if (r.type == DOUBLE)
 	{
-		std::cout << "entered the float conversion" << std::endl;
+		std::cout << "entered the DOUBLE conversion" << std::endl;
 		convert_values(&r, atof(input));
 	}
 	if (r.type == INVALID) {

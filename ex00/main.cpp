@@ -12,11 +12,11 @@ bool	isSpecialCase(char	*test)
 		std::cout << "Error! Argument cannot be empty!" << '\n';
 		return (true);
 	}
-	if (special_val == "naan" || special_val == "+inf" || special_val == "-inf" || special_val == "-inff" || special_val == "+inff")
-	{
-		std::cout << "Out of bound value found " << '\n';
-		return (true);
-	}
+	// if (special_val == "naan" || special_val == "+inf" || special_val == "-inf" || special_val == "-inff" || special_val == "+inff")
+	// {
+	// 	std::cout << "Out of bound value found " << '\n';
+	// 	return (true);
+	// }
 	return (false);
 }
 
