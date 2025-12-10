@@ -12,11 +12,6 @@ bool	isSpecialCase(char	*test)
 		std::cout << "Error! Argument cannot be empty!" << '\n';
 		return (true);
 	}
-	// if (special_val == "naan" || special_val == "+inf" || special_val == "-inf" || special_val == "-inff" || special_val == "+inff")
-	// {
-	// 	std::cout << "Out of bound value found " << '\n';
-	// 	return (true);
-	// }
 	return (false);
 }
 
@@ -29,6 +24,11 @@ int main(int argc, char **argv)
 	}
 	if (isSpecialCase(argv[1]))
 		exit(1);
-	ScalarConverter::convert(argv[1]);
+	t_result r;
+	std::cout << "the address of r in the main is " << &r.value << std::endl;
+	r = ScalarConverter::convert(argv[1]);
+	std::cout << "the address of r in the main is " << &r.value << "after convert" << std::endl;
+	std::cout << "inside main char is worth : " << r.value.c << '\n';
+	std::cout << r << std::endl;
 	return (0);
 }
