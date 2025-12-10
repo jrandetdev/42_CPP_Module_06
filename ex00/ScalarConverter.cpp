@@ -1,9 +1,9 @@
 #include "ScalarConverter.hpp"
 
-static void convert_values(t_result *r, char c);
-static void convert_values(t_result *r, int i);
-static void convert_values(t_result *r, double d);
-static void convert_values(t_result *r, float f);
+static void convertValues(t_result *r, char c);
+static void convertValues(t_result *r, int i);
+static void convertValues(t_result *r, double d);
+static void convertValues(t_result *r, float f);
 static void	setType(const char* input, t_result *r);
 
 ScalarConverter::ScalarConverter() {}
@@ -24,22 +24,22 @@ t_result	ScalarConverter::convert(const char* input)
 	//char *endptr;
 	if (r.type == CHAR) {
 		// std::cout << "entered the CHAR conversion" << std::endl;
-		convert_values(&r, input[1]);
+		convertValues(&r, input[1]);
 	}
 	else if (r.type == INT)
 	{
 		// std::cout << "entered the INT conversion" << std::endl;
-		convert_values(&r, atoi(input));
+		convertValues(&r, atoi(input));
 	}
 	else if (r.type == FLOAT)
 	{
 		// std::cout << "entered the FLOAT conversion" << std::endl;
-		convert_values(&r, std::strtof(input, NULL));
+		convertValues(&r, std::strtof(input, NULL));
 	}
 	else if (r.type == DOUBLE)
 	{
 		// std::cout << "entered the DOUBLE conversion" << std::endl;
-		convert_values(&r, atof(input));
+		convertValues(&r, strtod(input, NULL));
 	}
 	else if (r.type == INVALID) {
 		std::cout << "Error! Invalid literal type, cannot convert. Correct types needed:\n" \
@@ -66,6 +66,13 @@ static void	setType(const char* input, t_result *r) {
 	}
 
 	char	*end = NULL;
+	double result = std::strtod(input, &end);
+	if (*end == '\0' && (isinf(result) || isnan(result)))
+	{
+		r->type = DOUBLE;
+		return;
+	}
+
 	if ( input[len - 1] == 'f')
 	{
 		std::strtof(input, &end);
@@ -77,7 +84,7 @@ static void	setType(const char* input, t_result *r) {
 	if (std::strchr(input, '.') != NULL)
 	{
 		std::strtod(input, &end);
-		if (*end == '\0') // Good this means it consumed the entire string
+		if (*end == '\0' ) // Good this means it consumed the entire string
 			r->type = DOUBLE;
 		return ;
 	}
@@ -88,7 +95,7 @@ static void	setType(const char* input, t_result *r) {
 	return ;
 }
 
-static void convert_values(t_result *r, char c)
+static void convertValues(t_result *r, char c)
 {
 	std::cout << &r->value << std::endl;
 	r->value.c = c;
@@ -97,7 +104,7 @@ static void convert_values(t_result *r, char c)
 	r->value.f = static_cast<float>(c);
 }
 
-static void convert_values(t_result *r, int i)
+static void convertValues(t_result *r, int i)
 {
 	// std::cout << "entered the int convert values function" << '\n';
 	r->value.c = static_cast<char>(i);
@@ -106,7 +113,7 @@ static void convert_values(t_result *r, int i)
 	r->value.f = static_cast<float>(i);
 }
 
-static void convert_values(t_result *r, double d)
+static void convertValues(t_result *r, double d)
 {
 	r->value.c = static_cast<char>(d);
 	r->value.i = static_cast<int>(d);
@@ -114,7 +121,7 @@ static void convert_values(t_result *r, double d)
 	r->value.f = static_cast<float>(d);
 }
 
-static void convert_values(t_result *r, float f)
+static void convertValues(t_result *r, float f)
 {
 	r->value.c = static_cast<char>(f);
 	r->value.i = static_cast<int>(f);
@@ -124,12 +131,19 @@ static void convert_values(t_result *r, float f)
 
 std::ostream& operator<<(std::ostream& outstream, t_result r)
 {
-	if (isprint(r.value.c))
-		outstream << "char:\t" << r.value.c << '\n';
+	if (isinf(r.value.d) || isnan(r.value.d))
+	{
+		outstream << "char:\timpossible\n" << "int:\timpossible\n" ;
+	}
 	else
-		outstream << "char:\tNon displayable." << '\n';
-	outstream << "int:\t" << r.value.i << '\n' \
-	<< "double:\t" << std::fixed << std::setprecision(1) << r.value.d << '\n' \
+	{
+		if (isprint(r.value.c))
+			outstream << "char:\t" << r.value.c << '\n';
+		else
+			outstream << "char:\tNon displayable." << '\n';
+		outstream << "int:\t" << r.value.i << '\n';
+	}
+	outstream << "double:\t" << std::fixed << std::setprecision(1) << r.value.d << '\n' \
 	<< "float:\t" << std::fixed << std::setprecision(1) << r.value.f << "f\n";
 	return outstream;
 }

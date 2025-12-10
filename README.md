@@ -128,3 +128,45 @@ This is the "cleanest" method I found so far.
 ## NOTE
 
 I needed to use std::fixed and std::setprecision(1) for the output of the double and float. (wink wink to the previous excercise)
+
+For my setType function, instead of using a char by char analysis, I decided to use strtof, strtod, strtol which automatically factor in the leading whitespaces, '+' and '-' and then also detects inf and nan.
+
+If the endptr is pointing on '\0', then it means that the conversion was succesfull and that it parsed the entire string input. Otherwise it would have stopped at the character which kept it from parsing the entire result.
+
+Then once I had the type, I called `convertValues` which is a function I overloaded with the four different types. 
+
+```cpp
+static void convertValues(t_result *r, char c)
+{
+	std::cout << &r->value << std::endl;
+	r->value.c = c;
+	r->value.i = static_cast<int>(c);
+	r->value.d = static_cast<double>(c);
+	r->value.f = static_cast<float>(c);
+}
+
+static void convertValues(t_result *r, int i)
+{
+	// std::cout << "entered the int convert values function" << '\n';
+	r->value.c = static_cast<char>(i);
+	r->value.i = i;
+	r->value.d = static_cast<double>(i);
+	r->value.f = static_cast<float>(i);
+}
+
+static void convertValues(t_result *r, double d)
+{
+	r->value.c = static_cast<char>(d);
+	r->value.i = static_cast<int>(d);
+	r->value.d = d;
+	r->value.f = static_cast<float>(d);
+}
+
+static void convertValues(t_result *r, float f)
+{
+	r->value.c = static_cast<char>(f);
+	r->value.i = static_cast<int>(f);
+	r->value.d = static_cast<double>(f);
+	r->value.f = f;
+}
+```
