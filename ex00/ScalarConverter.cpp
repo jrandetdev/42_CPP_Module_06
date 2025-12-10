@@ -1,10 +1,9 @@
 #include "ScalarConverter.hpp"
-#include <iostream>
-#include <string>
-#include <limits>
-#include <cstring>
-#include <cstdlib>
-#include <inttypes.h>
+static void convert_values(t_result *r, char c);
+static void convert_values(t_result *r, int i);
+static void convert_values(t_result *r, double d);
+static void convert_values(t_result *r, float f);
+static void	setType(const char* input, t_result *r);
 
 ScalarConverter::ScalarConverter() {}
 
@@ -15,7 +14,40 @@ ScalarConverter& ScalarConverter::operator=(const ScalarConverter& other) {
 	return(*this);
 }
 
-void convert_values(t_result *r, char c)
+ScalarConverter::~ScalarConverter() {}
+
+t_result	ScalarConverter::convert(const char* input)
+{
+	t_result		r;
+	setType(input, &r);
+
+	char *endptr;
+	if (r.type == CHAR) {
+		std::cout << "entered the CHAR conversion" << std::endl;
+		convert_values(&r, input[1]);
+	}
+	if (r.type == INT)
+	{
+		std::cout << "entered the INT conversion" << std::endl;
+		convert_values(&r, strtol(input, &endptr, 10));
+	}
+	if (r.type == FLOAT)
+	{
+		std::cout << "entered the FLOAT conversion" << std::endl;
+		convert_values(&r, atof(input));
+	}
+	if (r.type == DOUBLE)
+	{
+		std::cout << "entered the DOUBLE conversion" << std::endl;
+		convert_values(&r, atof(input));
+	}
+	if (r.type == INVALID) {
+		std::cout << "Error! Invalid literal type, cannot convert. Correct types needed:" \
+			" char (./scalarconvert \"\'a\'\"), int, double, or float." << std::endl; }
+	return r;
+}
+
+static void convert_values(t_result *r, char c)
 {
 	std::cout << "detected CHAR, inside the char convert function" << '\n';
 	r->value.c = c;
@@ -24,7 +56,7 @@ void convert_values(t_result *r, char c)
 	r->value.f = static_cast<float>(c);
 }
 
-void convert_values(t_result *r, int i)
+static void convert_values(t_result *r, int i)
 {
 	r->value.c = static_cast<char>(i);
 	r->value.i = i;
@@ -32,7 +64,7 @@ void convert_values(t_result *r, int i)
 	r->value.f = static_cast<float>(i);
 }
 
-void convert_values(t_result *r, double d)
+static void convert_values(t_result *r, double d)
 {
 	r->value.c = static_cast<char>(d);
 	r->value.i = static_cast<int>(d);
@@ -40,7 +72,7 @@ void convert_values(t_result *r, double d)
 	r->value.f = static_cast<float>(d);
 }
 
-void convert_values(t_result *r, float f)
+static void convert_values(t_result *r, float f)
 {
 	r->value.c = static_cast<char>(f);
 	r->value.i = static_cast<int>(f);
@@ -48,9 +80,7 @@ void convert_values(t_result *r, float f)
 	r->value.f = f;
 }
 
-ScalarConverter::~ScalarConverter() {}
-
-void	setType(const char* input, t_result *r) {
+static void	setType(const char* input, t_result *r) {
 
 	size_t	len = std::strlen(input);
 	r->type = INVALID;
@@ -87,36 +117,14 @@ void	setType(const char* input, t_result *r) {
 	std::strtol(input, &end, 10);
 	if (*end == '\0') // Good this means it consumed the entire string
 		r->type = INT;
-
-	if (*end )
 	return ;
 }
 
-void	ScalarConverter::convert(const char* input)
+std::ostream& operator<<(std::ostream& outsream, t_result *r)
 {
-	t_result r;
-	setType(input, &r);
-	if (r.type == CHAR) {
-		std::cout << "entered the CHAR conversion" << std::endl;
-		convert_values(&r, input[1]);
-	}
-	if (r.type == INT)
-	{
-		std::cout << "entered the INT conversion" << std::endl;
-		convert_values(&r, atoi(input));
-	}
-	if (r.type == FLOAT)
-	{
-		std::cout << "entered the FLOAT conversion" << std::endl;
-		convert_values(&r, atof(input));
-	}
-	if (r.type == DOUBLE)
-	{
-		std::cout << "entered the DOUBLE conversion" << std::endl;
-		convert_values(&r, atof(input));
-	}
-	if (r.type == INVALID) {
-		std::cout << "Error! Invalid literal type, cannot convert. Correct types needed:" \
-			" char (./scalarconvert \"\'a\'\"), int, double, or float." << std::endl; }
-	return ;
+	std::cout << "char: " << r->value.c << '\n';
+	std::cout << "int: " << r->value.i << '\n';
+	std::cout << "double: " << r->value.d << '\n';
+	std::cout << "float: " << r->value.f << '\n';
+	return outsream;
 }

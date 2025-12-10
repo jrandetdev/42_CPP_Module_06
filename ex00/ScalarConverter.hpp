@@ -1,10 +1,13 @@
 #ifndef SCALARCONVERTER_HPP
 # define SCALARCONVERTER_HPP
 
-#include <string>
 #include <iostream>
+#include <string>
 #include <limits>
+#include <cstring>
 #include <cstdlib>
+#include <inttypes.h>
+#include <sstream>
 
 enum Type { CHAR, INT, DOUBLE, FLOAT, INVALID };
 
@@ -30,9 +33,10 @@ class ScalarConverter
 		ScalarConverter& operator=(const ScalarConverter& other);
 		virtual ~ScalarConverter();
 	public:
-		static void	convert(const char* input);
+		t_result	convert(const char* input);
 };
 
-void	setType(const char* stringLiteral, t_result *r);
+// void	setType(const char* stringLiteral, t_result *r);
+std::ostream& operator<<(std::ostream& os, const t_result *r);
 
 #endif
