@@ -41,8 +41,9 @@ t_result	ScalarConverter::convert(const char* input)
 		convert_values(&r, atof(input));
 	}
 	else if (r.type == INVALID) {
-		std::cout << "Error! Invalid literal type, cannot convert. Correct types needed:" \
-			" char (./scalarconvert \"\'a\'\"), int, double, or float." << std::endl;
+		std::cout << "Error! Invalid literal type, cannot convert. Correct types needed:\n" \
+			"- char (./scalarconvert \"\'a\'\")\n- int (decimal base)\n- double (4.2 for ex)\n" \
+			"- float (with '.' and f at end)" << std::endl;
 		
 	}
 	return r;
@@ -123,11 +124,10 @@ static void convert_values(t_result *r, double d)
 
 std::ostream& operator<<(std::ostream& outstream, t_result r)
 {
-	std::cout << "in outstream overload function, the char is" << r.value.c << '\n';
 	if (isprint(r.value.c))
 		outstream << "char: " << r.value.c << '\n';
 	else
-		outstream << "char: " << "impossible." << '\n';
+		outstream << "char is not printable" << '\n';
 	outstream << "int: " << r.value.i << '\n' \
 	<< "double: " << r.value.d << '\n' \
 	<< "float: " << r.value.f << '\n';

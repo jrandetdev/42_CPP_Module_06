@@ -27,8 +27,8 @@ int main(int argc, char **argv)
 	t_result r;
 	std::cout << "the address of r in the main is " << &r.value << std::endl;
 	r = ScalarConverter::convert(argv[1]);
-	std::cout << "the address of r in the main is " << &r.value << "after convert" << std::endl;
-	std::cout << "inside main char is worth : " << r.value.c << '\n';
+	if (r.type == INVALID)
+		exit(1);
 	std::cout << r << std::endl;
 	return (0);
 }
