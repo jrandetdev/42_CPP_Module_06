@@ -81,7 +81,7 @@ static void	setType(const char* input, t_result *r) {
 			r->type = DOUBLE;
 		return ;
 	}
-	
+
 	std::strtol(input, &end, 10);
 	if (*end == '\0') // Good this means it consumed the entire string
 		r->type = INT;
