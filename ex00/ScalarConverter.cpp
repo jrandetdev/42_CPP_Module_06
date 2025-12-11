@@ -22,28 +22,13 @@ t_result	ScalarConverter::convert(const char* input)
 	t_result		r;
 	setType(input, &r);
 	//char *endptr;
-	if (r.type == CHAR) {
-		// std::cout << "entered the CHAR conversion" << std::endl;
-		convertValues(&r, input[1]);
-	}
-	else if (r.type == INT)
-	{
-		// std::cout << "entered the INT conversion" << std::endl;
-		convertValues(&r, atoi(input));
-	}
-	else if (r.type == FLOAT)
-	{
-		// std::cout << "entered the FLOAT conversion" << std::endl;
-		convertValues(&r, std::strtof(input, NULL));
-	}
-	else if (r.type == DOUBLE)
-	{
-		// std::cout << "entered the DOUBLE conversion" << std::endl;
-		convertValues(&r, strtod(input, NULL));
-	}
+	if (r.type == CHAR) { convertValues(&r, input[0]); }
+	else if (r.type == INT) { convertValues(&r, atoi(input)); }
+	else if (r.type == FLOAT) { convertValues(&r, std::strtof(input, NULL)); }
+	else if (r.type == DOUBLE) { convertValues(&r, strtod(input, NULL)); }
 	else if (r.type == INVALID) {
 		std::cout << "Error! Invalid literal type, cannot convert. Correct types needed:\n" \
-			"- char (./scalarconvert \"\'a\'\")\n- int (decimal base)\n- double (4.2 for ex)\n" \
+			"- char (./scalarconvert a)\n- int (decimal base)\n- double (4.2 for ex)\n" \
 			"- float (with '.' and f at end)" << std::endl;
 		
 	}
@@ -57,17 +42,15 @@ static void	setType(const char* input, t_result *r) {
 	if (len == 0)
 		return ;
 
-	if (len == 3 && input[0] == '\'' && input[2] == '\'') {
-		if (isprint(input[1]))
-		{
-			r->type = CHAR;
-			return ;
-		}
+	if (len == 1 && isalpha(input[0])) {
+		std::cout << "entered the function here" << '\n';
+		r->type = CHAR;
+		return ;
 	}
 
 	char	*end = NULL;
 	double result = std::strtod(input, &end);
-	if (*end == '\0' && (isinf(result) || isnan(result)))
+	if (*end == '\0' && (std::isinf(result) || std::isnan(result)))
 	{
 		r->type = DOUBLE;
 		return;
@@ -97,7 +80,7 @@ static void	setType(const char* input, t_result *r) {
 
 static void convertValues(t_result *r, char c)
 {
-	std::cout << &r->value << std::endl;
+	//std::cout << &r->value << std::endl;
 	r->value.c = c;
 	r->value.i = static_cast<int>(c);
 	r->value.d = static_cast<double>(c);
@@ -106,7 +89,7 @@ static void convertValues(t_result *r, char c)
 
 static void convertValues(t_result *r, int i)
 {
-	// std::cout << "entered the int convert values function" << '\n';
+	std::cout << "entered the int convert values function" << '\n';
 	r->value.c = static_cast<char>(i);
 	r->value.i = i;
 	r->value.d = static_cast<double>(i);
@@ -131,7 +114,7 @@ static void convertValues(t_result *r, float f)
 
 std::ostream& operator<<(std::ostream& outstream, t_result r)
 {
-	if (isinf(r.value.d) || isnan(r.value.d))
+	if (std::isinf(r.value.d) || std::isnan(r.value.d))
 	{
 		outstream << "char:\timpossible\n" << "int:\timpossible\n" ;
 	}
