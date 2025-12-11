@@ -6,6 +6,8 @@ static void convertValues(t_result *r, int i);
 static void convertValues(t_result *r, double d);
 static void convertValues(t_result *r, float f);
 
+/// CONSTRUCTORS AND DESTRUCTOR
+
 ScalarConverter::ScalarConverter() {}
 
 ScalarConverter::ScalarConverter(const ScalarConverter& other) { (void)other; }
@@ -16,6 +18,8 @@ ScalarConverter& ScalarConverter::operator=(const ScalarConverter& other) {
 }
 
 ScalarConverter::~ScalarConverter() {}
+
+/// CONVERT FUNCTION
 
 t_result	ScalarConverter::convert(const char* input)
 {
@@ -46,49 +50,65 @@ t_result	ScalarConverter::convert(const char* input)
 	return r;
 }
 
+/// SET TYPE FUNCTION
+
 static void	setType(const char* input, t_result *r) 
 {
-	// initialisation
 	size_t	len = std::strlen(input);
 	r->type = INVALID;
-	if (len == 0) { return ; }
-	// check for the char
-	if (len == 1 && isalpha(input[0])) {
+	if (len == 0) 
+		return ;
+
+	if (len == 1 && isalpha(input[0]))
+	{
 		r->type = CHAR;
 		return ;
 	}
 
-	// preparation for double, float, and int for strtod, strtof, and strtol
 	errno = 0;
 	char	*end = NULL;
 
-	// float check bfore double 
 	if ( input[len - 1] == 'f')
 	{
 		std::strtof(input, &end);
-		if (errno == ERANGE) { perror("strtof"); r->type = INVALID; return; }
+		if (errno == ERANGE)
+		{
+			perror("strtof");
+			r->type = INVALID;
+			return;
+		}
 		if (*end == 'f' && *(end + 1) == '\0')
 			r->type = FLOAT;
 		return ;
 	}
 	
-	// check for the isinf and isnan, 
 	double d_result = std::strtod(input, &end);
-	if (*end == '\0' && (std::isinf(d_result) || std::isnan(d_result))) { r->type = DOUBLE; return; }
+	if (*end == '\0' && (std::isinf(d_result) || std::isnan(d_result)))
+	{
+		r->type = DOUBLE;
+		return;
+	}
 
-	// check for double
 	if (std::strchr(input, '.') != NULL)
 	{
 		std::strtod(input, &end);
-		if (errno == ERANGE) { std::strerror(errno); r->type = INVALID; return; }
+		if (errno == ERANGE) {
+			std::strerror(errno);
+			r->type = INVALID;
+			return;
+		}
 		if (*end == '\0' )
 			r->type = DOUBLE;
 		return ;
 	}
 
-	std::cout << errno << '\n';
 	long n = std::strtol(input, &end, 10);
-	if (errno == EINVAL) { perror("strtol"); r->type = INVALID; return ; }
+	if (errno == EINVAL)
+	{
+		perror("strtol");
+		r->type = INVALID;
+		return ;
+	}
 	if (errno == ERANGE && n <= std::numeric_limits<int>::min())
 	{ 
 		perror("strtol");
@@ -105,6 +125,8 @@ static void	setType(const char* input, t_result *r)
 		r->type = INT;
 	return ;
 }
+
+/// CONVERTING FUNCTIONS
 
 static void convertValues(t_result *r, char c)
 {
@@ -137,6 +159,8 @@ static void convertValues(t_result *r, float f)
 	r->value.d = static_cast<double>(f);
 	r->value.f = f;
 }
+
+/// OVERLOAD OF THE OSTREAM STREAM
 
 std::ostream& operator<<(std::ostream& outstream, t_result r)
 {
