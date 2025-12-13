@@ -24,7 +24,7 @@
 #define BOLD    "\033[1m"
 #endif
 
-enum Type { CHAR, INT, DOUBLE, FLOAT, INVALID };
+enum Type { CHAR, INT, DOUBLE, FLOAT, INVALID, OUTOFRANGE};
 
 typedef struct	s_value
 {
@@ -51,7 +51,7 @@ class ScalarConverter
 		static t_result	convert(const char* input);
 };
 
-// void	setType(const char* stringLiteral, t_result *r);
 std::ostream& operator<<(std::ostream& os, t_result r);
+
 
 #endif

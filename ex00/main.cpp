@@ -9,7 +9,7 @@ bool	isSpecialCase(char	*test)
 	std::string special_val(test);
 	if (special_val.empty())
 	{
-		std::cout << "Error! Argument cannot be empty!" << '\n';
+		std::cout << "Error! Argument cannot be an empty literal." << '\n';
 		return (true);
 	}
 	return (false);
@@ -19,15 +19,16 @@ int main(int argc, char **argv)
 {
 	if (argc != 2)
 	{
-		std::cout << "Error ! Please input only one literal (char, int, float, or double)." << std::endl;
+		std::cout << "Error! The program does not accept " << (argc - 1) << " arguments. It accepts 1 argument." << '\n'
+			<< "Please input a literal (char, int, float, doble)" << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	if (isSpecialCase(argv[1]))
-		exit(1);
+		exit(EXIT_FAILURE);
+
 	t_result r;
-	// std::cout << "the address of r in the main is " << &r.value << std::endl;
 	r = ScalarConverter::convert(argv[1]);
-	if (r.type == INVALID)
+	if (r.type == INVALID || r.type == OUTOFRANGE)
 		exit(1);
 	std::cout << r << std::endl;
 	return (0);

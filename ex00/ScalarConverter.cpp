@@ -1,4 +1,5 @@
 #include "ScalarConverter.hpp"
+#include "isType.hpp"
 
 static void	setType(const char* input, t_result *r);
 static void convertValues(t_result *r, char c);
@@ -28,16 +29,16 @@ t_result	ScalarConverter::convert(const char* input)
 	switch(r.type)
 	{
 		case (CHAR):
-			convertValues(&r, input[0]);
+			convertValues(&r, r.value.c);
 			break;
 		case (INT):
-			convertValues(&r, atoi(input));
+			convertValues(&r, r.value.i);
 			break;
 		case (FLOAT):
-			convertValues(&r, std::strtof(input, NULL));
+			convertValues(&r, r.value.f);
 			break;
 		case (DOUBLE):
-			convertValues(&r, strtod(input, NULL));
+			convertValues(&r, r.value.d);
 			break;
 		case(INVALID):
 			std::cout << RED << "\nError! Invalid literal type, cannot convert. Correct types needed:\n" \
@@ -54,75 +55,21 @@ t_result	ScalarConverter::convert(const char* input)
 
 static void	setType(const char* input, t_result *r) 
 {
-	size_t	len = std::strlen(input);
 	r->type = INVALID;
-	if (len == 0) 
-		return ;
-
-	if (len == 1 && isalpha(input[0]))
-	{
-		r->type = CHAR;
-		return ;
-	}
+	std::memset(&r->value, 0, sizeof(r->value));
 
 	errno = 0;
 	char	*end = NULL;
-
-	if ( input[len - 1] == 'f')
-	{
-		std::strtof(input, &end);
-		if (errno == ERANGE)
-		{
-			perror("strtof");
-			r->type = INVALID;
-			return;
-		}
-		if (*end == 'f' && *(end + 1) == '\0')
-			r->type = FLOAT;
+	if (isChar(input, r))
 		return ;
-	}
-	
-	double d_result = std::strtod(input, &end);
-	if (*end == '\0' && (std::isinf(d_result) || std::isnan(d_result)))
-	{
-		r->type = DOUBLE;
+	if (isFloat(input, r, end))
+		return ;
+	if (isNanOrInf(input, r, end))
+		return ;
+	if (isDoule(input, r, end))
+		return ;
+	if (isInt(input, r, end))
 		return;
-	}
-
-	if (std::strchr(input, '.') != NULL)
-	{
-		std::strtod(input, &end);
-		if (errno == ERANGE) {
-			std::strerror(errno);
-			r->type = INVALID;
-			return;
-		}
-		if (*end == '\0' )
-			r->type = DOUBLE;
-		return ;
-	}
-
-	long n = std::strtol(input, &end, 10);
-	if (errno == EINVAL)
-	{
-		perror("strtol");
-		r->type = INVALID;
-		return ;
-	}
-	if (errno == ERANGE && n <= std::numeric_limits<int>::min())
-	{ 
-		perror("strtol");
-		r->type = INVALID;
-		return; 
-	}
-	if (errno == ERANGE && n >= std::numeric_limits<int>::max()) 
-	{ 
-		perror("strtol");
-		r->type = INVALID;
-		return;
-	}
-	if (*end == '\0')
-		r->type = INT;
 	return ;
 }
 
@@ -130,7 +77,6 @@ static void	setType(const char* input, t_result *r)
 
 static void convertValues(t_result *r, char c)
 {
-	r->value.c = c;
 	r->value.i = static_cast<int>(c);
 	r->value.d = static_cast<double>(c);
 	r->value.f = static_cast<float>(c);
@@ -139,7 +85,6 @@ static void convertValues(t_result *r, char c)
 static void convertValues(t_result *r, int i)
 {
 	r->value.c = static_cast<char>(i);
-	r->value.i = i;
 	r->value.d = static_cast<double>(i);
 	r->value.f = static_cast<float>(i);
 }
@@ -148,7 +93,6 @@ static void convertValues(t_result *r, double d)
 {
 	r->value.c = static_cast<char>(d);
 	r->value.i = static_cast<int>(d);
-	r->value.d = d;
 	r->value.f = static_cast<float>(d);
 }
 
@@ -157,7 +101,6 @@ static void convertValues(t_result *r, float f)
 	r->value.c = static_cast<char>(f);
 	r->value.i = static_cast<int>(f);
 	r->value.d = static_cast<double>(f);
-	r->value.f = f;
 }
 
 /// OVERLOAD OF THE OSTREAM STREAM
