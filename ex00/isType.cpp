@@ -38,7 +38,9 @@ bool isNanOrInf(const char *input, t_result *r, char *end)
 	double d_result = std::strtod(input, &end);
 	if (*end == '\0' && (std::isinf(d_result) || std::isnan(d_result)))
 	{
+		std::cout << "confirmed" << '\n';
 		r->type = DOUBLE;
+		r->value.d = d_result;
 		return (true);
 	}
 	return (false);

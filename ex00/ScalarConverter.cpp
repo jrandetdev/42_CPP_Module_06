@@ -38,6 +38,7 @@ t_result	ScalarConverter::convert(const char* input)
 			convertValues(&r, r.value.f);
 			break;
 		case (DOUBLE):
+			std::cout << "inf or nan" << '\n';
 			convertValues(&r, r.value.d);
 			break;
 		case(INVALID):
@@ -62,9 +63,12 @@ static void	setType(const char* input, t_result *r)
 	char	*end = NULL;
 	if (isChar(input, r))
 		return ;
-	if (isFloat(input, r, end))
-		return ;
 	if (isNanOrInf(input, r, end))
+	{
+		std::cout << "entered the isnan function" << '\n';
+		return ;
+	}
+	if (isFloat(input, r, end))
 		return ;
 	if (isDoule(input, r, end))
 		return ;
