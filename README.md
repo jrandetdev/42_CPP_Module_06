@@ -6,167 +6,42 @@ Introduction to type casting in C++.
 
 ---
 
-## ex00 : Conversion of scalar types
+## Type conversion
 
-## Objective
-
-We need to write a ScalarConverter class that contains one static method called `convert` that will take as parameter a string representation of a C++ literal in its most common form (const char* literal) and output its value in the following series of scalar types:
-
-- char ( for example 'a' 'c' etc. no special character are treated) If a conversion to char is not a displayable, we need to print an informative message.
-- int (0, -42, 42...) 
-- float (0.0f, -4.2f, 4.2f,... and some pseudo literals such as -inff and +inff)
-- double (0.0, -4.2, 4.2 and +inf and -inf)
-
-The class does not store anything, and it should not be instantiable by users (probably meaning it is abstract).
-
-First I have to detect the type of literal passed as a param, convert it from string to its actual type, then convert it explicitly to the three other data types. I have to display the results as shown below:
-
-```bash
-./convert 0
-char: Non displayable
-int: 0
-float: 0.0f
-double: 0.0
-./convert nan
-char: impossible
-int: impossible
-float: nanf
-double: nan
-./convert 42.0f
-char: '*'
-int: 42
-float: 42.0f
-double: 42.0
-```
-
----
-
-## Why conversions are needed and introduction to implicit conversion
-
-The value of an object is stored as a sequence of bits. The data type of the object will tell the compiler how it should interpret those bits into meaningful values.
-
-They are stored differently. For example, the integer value 3 might be stored as binary 0000 0000 0000 0000 0000 0000 0000 0011, whereas floating point value 3.0 might be stored as binary 0100 0000 0100 0000 0000 0000 0000 0000.
-
-Explicit casts occur when the compiler converts from one data type to another without any data loss risk. For example I have an int and I want to convert it to a double: it is possible. 
-
-We could want to be explicit and do 
+type conversion of a value behaves much like a call to a function whose return type matches the target tye of the conversion. The data to be converted is passed as an arument and the converted result is returned (in a temporary object) returned to the caller.
 
 ```cpp
-double value = 5.25;
-int a = (int)value; // this will truncate the value (c style cast)
-```
+#include <iostream>
 
-If the conversion cannot work, the compiler will produce a compile error. 
-
-Narrowing conversions --> when the destination type could not hold the values of the source type (truncation)
-
-ex: float to int, int to float, int to short, 
-
-Narrowing conversions should be avoided but sometimes you still have to do an explicit conversion with a cast for function calls where the function parameters and argument may hve mistmatch tyoes. 
-
-## Explicit casting
-
-When we need to explicitly state that we are using a narrowing conversion, we use a static cast.
-
-It doesn't do anything that C-style cast can't do. The conversion is a successful type conversion, but it adds synthax "sugar" to your code. 
-
-It's a way to say that a static cast is actually a static cast, reinterpret cast is a type puning technique whereby you reinterpret the memory, const cast: I'm removing the constness of this value (making your actions explicit)
-
-The different types of casts:
-- static_cast : performs compile-time type conversions between related types
-- dynamic_cast : Performs runtime type conversions on pointers or references in a polymorphism hierarchy (inheritance)
-- const_cast : Adds or removes const
-- C-style casts : performs a combination of all 3 listed above and is just not explicit.
-
-C-style casting is done with the operator() and the name of the type used to convert is in the paranethesis. The issue is that it can perform a variety of different actions "under the hood", which can make the code more difficult to understand. 
-
-It performs the following in order:
-- const_cast
-- static_cast
-- static_cast, followed by const_cast
-- reinterpret_cast
-- reinterpret_cast, followed by const_cast
-
-
-Casting an int into a char is potentially unsade (the compiler cannot tell whether the integer value will overflow the range of the char or not). To contour the error, we use static cast, which explicitly tells the compiler that this conversion is intended, and that we accept the responsibility for the consequences. 
-
-
----
-
-## My strategy for the excercise 
-
-I used an approach with a result struct containing:
-- an enum with the different types
-- a struct containing the different values for the types. This is where I will perform the static casts.
-
-```cpp
-enum Type { CHAR, INT, DOUBLE, FLOAT, IMPOSSIBLE };
-
-typedef struct t_value
+int main()
 {
-	char	c;
-	int		i;
-	double	d;
-	float	f;
-}				s_value;
+    int x { 10 };
+    int y { 4 };
 
-typedef struct	s_result
-{
-	Type	type;
-	Value	value;
-}				t_result;
-```
+    std::cout << (double)x / y << '\n'; // C-style cast of x to double
 
-The goal was to:
-1. First parse the input, find the data type through getType function and store it in the Type part of the struct.
-2. Then according to the Type found (CHAR, INT, DOUBLE, FLOAT, or IMPOSSIBLE), I use functions like atoi, atof, etc and convert it into its corresponding type.
-3. Finally, I overloaded a function called convert_values and it's different versions will be called depending on what I send to the function.
-4. Finally, I output it by using an overload of the ostream operator <<
-
-This is the "cleanest" method I found so far. 
-
-## NOTE
-
-I needed to use std::fixed and std::setprecision(1) for the output of the double and float. (wink wink to the previous excercise)
-
-For my setType function, instead of using a char by char analysis, I decided to use strtof, strtod, strtol which automatically factor in the leading whitespaces, '+' and '-' and then also detects inf and nan.
-
-If the endptr is pointing on '\0', then it means that the conversion was succesfull and that it parsed the entire string input. Otherwise it would have stopped at the character which kept it from parsing the entire result.
-
-Then once I had the type, I called `convertValues` which is a function I overloaded with the four different types. 
-
-```cpp
-static void convertValues(t_result *r, char c)
-{
-	std::cout << &r->value << std::endl;
-	r->value.c = c;
-	r->value.i = static_cast<int>(c);
-	r->value.d = static_cast<double>(c);
-	r->value.f = static_cast<float>(c);
-}
-
-static void convertValues(t_result *r, int i)
-{
-	// std::cout << "entered the int convert values function" << '\n';
-	r->value.c = static_cast<char>(i);
-	r->value.i = i;
-	r->value.d = static_cast<double>(i);
-	r->value.f = static_cast<float>(i);
-}
-
-static void convertValues(t_result *r, double d)
-{
-	r->value.c = static_cast<char>(d);
-	r->value.i = static_cast<int>(d);
-	r->value.d = d;
-	r->value.f = static_cast<float>(d);
-}
-
-static void convertValues(t_result *r, float f)
-{
-	r->value.c = static_cast<char>(f);
-	r->value.i = static_cast<int>(f);
-	r->value.d = static_cast<double>(f);
-	r->value.f = f;
+    return 0;
 }
 ```
+
+Here, (double)x returns 10.0 as a temp obbject, and so y is automatically converted and a double floating point division is performed instead of an int division.
+
+**Implicit type conversion warnings** are compile time warnings which will be thrown if ever the conversion results in a loss of data. For example whe you go from double 5.5 to 5 (loss of 0.5)
+
+## Explicit type conversions
+
+C++ upports a second method of type comversion called explicit tpe conversion. The programmer takes full responsibility of asking the compiler to convert a variable's type to another type.
+
+The static_cast<new_type>(expresssion) is used and it returns the new value converted to the type specified by new_type. 
+
+Because this is explicit, the compiler will not throw an error if we lose data.
+
+## Casting vs initialising a temp object
+
+If we have a variable x that we need to convert to an int, we have two options: direct initilaisation or static cast. 
+
+If we use direct list initialisation int {x} which creates a temporary int object, list initialisation dissalows narrowing conversions, we will have an issue if we go from a 64 bit OS to a 32 bit OS with the conversion of int to double.
+
+A duble uses 64 bts total, but only has 53 bits for storing the actual number. This means that it can represet all the 32 bit ints, but no the 64 bit ints. Here again, a compiler would throw an error.
+
+To avoid this, we use static_cast<new_type>(value)
