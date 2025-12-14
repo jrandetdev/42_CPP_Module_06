@@ -14,9 +14,13 @@ bool isChar(const char *input, t_result *r)
 
 bool isFloat(const char *input, t_result *r, char *end)
 {
-	if (input[std::strlen(input) - 1] == 'f')
+	if (std::strchr(input, '.') != NULL && input[std::strlen(input) - 1] == 'f')
 	{
 		float floatTemp = std::strtof(input, &end);
+		if (end == input)
+		{
+			std::cout << "Conversion to float failed for given input"
+		}
 		if (errno == ERANGE)
 		{
 			perror("strtof");
@@ -38,7 +42,6 @@ bool isNanOrInf(const char *input, t_result *r, char *end)
 	double d_result = std::strtod(input, &end);
 	if (*end == '\0' && (std::isinf(d_result) || std::isnan(d_result)))
 	{
-		std::cout << "confirmed" << '\n';
 		r->type = DOUBLE;
 		r->value.d = d_result;
 		return (true);
@@ -79,7 +82,7 @@ bool isInt(const char *input, t_result *r, char *end)
 	if (*end == '\0')
 	{
 		r->type = INT;
-		r->value.i = atoi(input);
+		r->value.i = static_cast<int>(longTemp);
 		std::cout << "in int conversion " << r->value.i << '\n';
 		return (true);
 	}

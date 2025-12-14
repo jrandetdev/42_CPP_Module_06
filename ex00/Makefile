@@ -1,4 +1,4 @@
-NAME		=	scalarconvert
+NAME		=	convert
 DIR_SRC		=	./
 DIR_BUILD	=	./build
 CXX			=	c++

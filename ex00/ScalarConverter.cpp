@@ -38,7 +38,6 @@ t_result	ScalarConverter::convert(const char* input)
 			convertValues(&r, r.value.f);
 			break;
 		case (DOUBLE):
-			std::cout << "inf or nan" << '\n';
 			convertValues(&r, r.value.d);
 			break;
 		case(INVALID):
@@ -64,10 +63,7 @@ static void	setType(const char* input, t_result *r)
 	if (isChar(input, r))
 		return ;
 	if (isNanOrInf(input, r, end))
-	{
-		std::cout << "entered the isnan function" << '\n';
 		return ;
-	}
 	if (isFloat(input, r, end))
 		return ;
 	if (isDoule(input, r, end))
@@ -118,12 +114,12 @@ std::ostream& operator<<(std::ostream& outstream, t_result r)
 	else
 	{
 		if (isprint(r.value.c))
-			outstream << "char:\t" << r.value.c << '\n';
+			outstream << "char:\t\'" << r.value.c << '\'' << '\n';
 		else
 			outstream << "char:\tNon displayable." << '\n';
 		outstream << "int:\t" << r.value.i << '\n';
 	}
 	outstream << "double:\t" << std::fixed << std::setprecision(1) << r.value.d << '\n' \
-	<< "float:\t" << std::fixed << std::setprecision(1) << r.value.f << "f\n";
+	<< "float:\t" << std::fixed << std::setprecision(1) << r.value.f << "f";
 	return outstream;
 }
