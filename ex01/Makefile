@@ -1,11 +1,11 @@
-NAME		=	scalarconvert
+NAME		=	serialize
 DIR_SRC		=	./
 DIR_BUILD	=	./build
 CXX			=	c++
 CXXFLAGS	=	-std=c++98 -Wall -Werror -Wextra -pedantic 
 LDINCLUDE	=	-I$(DIR_SRC)
 
-SRCS		=	ScalarConverter.cpp main.cpp
+SRCS		=	main.cpp Serializer.cpp
 SRCS_NAME	=	$(basename $(SRCS))
 OBJS		=	$(addsuffix .o, $(addprefix $(DIR_BUILD)/, $(SRCS_NAME)))
 

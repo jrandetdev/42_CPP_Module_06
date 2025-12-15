@@ -8,40 +8,51 @@ Introduction to type casting in C++.
 
 ## Type conversion
 
-type conversion of a value behaves much like a call to a function whose return type matches the target tye of the conversion. The data to be converted is passed as an arument and the converted result is returned (in a temporary object) returned to the caller.
+---
 
+## Implicit type conversions
+
+Automatically performed when a value is copied to a compatible type where no data is lost. For example short to int. 
+
+Converting from a int from a smaller integer type or from a double to a float is called a promotion, and it is garanteed not to truncate any value from the data.
+
+Other conversions may not conserve all the value. Converting from a negative integer to an unsigned type results in the 2's complement bitwise representation (-1 becomes the largest value representable by the type, -2 the second largest etc (it loops around)).
+
+Convertimg from floating point to int means that there is a possible truncation of the value, meaning what is after the decimal is not kept. 
+
+If the conversion is from int to int and float to float, it can not work in certain cases due to the OS and is implementation specific(not portable).
+
+If some of the data is lost, the compiler can issue a warning. This warning can be avoided if we cast using explicit casts. 
+
+## Ex00
+
+In ex00, we are asked to convert a literal (const char *) through a static method "convert" into the four types: char, int, double, and float where possible. 
+We also need to treat the following cases:
+- +inf, -inf
+- +nan, -nan
+- +nanf, -nanf
+
+We had to convert it first to it's actual type (done through parsing) and then convert it explicitly to the three other data types.
+
+My strategy 
+
+
+## Ex01
+
+In this excercise, we were asked to use another type of casting operator:
+
+**reinterpret_cast<type>(data)**
+
+We had to write two static methods:
 ```cpp
-#include <iostream>
-
-int main()
-{
-    int x { 10 };
-    int y { 4 };
-
-    std::cout << (double)x / y << '\n'; // C-style cast of x to double
-
-    return 0;
-}
+uintptr_t serialize(Data* ptr);
 ```
 
-Here, (double)x returns 10.0 as a temp obbject, and so y is automatically converted and a double floating point division is performed instead of an int division.
+It takes a pointer and converts it to the unsigned integer type uintptr_t.
 
-**Implicit type conversion warnings** are compile time warnings which will be thrown if ever the conversion results in a loss of data. For example whe you go from double 5.5 to 5 (loss of 0.5)
+```cpp
+Data* deserialize(uintptr_t raw):
+```
 
-## Explicit type conversions
+It takes an unsigned integer parameter and converts it to a pointer to Data.
 
-C++ upports a second method of type comversion called explicit tpe conversion. The programmer takes full responsibility of asking the compiler to convert a variable's type to another type.
-
-The static_cast<new_type>(expresssion) is used and it returns the new value converted to the type specified by new_type. 
-
-Because this is explicit, the compiler will not throw an error if we lose data.
-
-## Casting vs initialising a temp object
-
-If we have a variable x that we need to convert to an int, we have two options: direct initilaisation or static cast. 
-
-If we use direct list initialisation int {x} which creates a temporary int object, list initialisation dissalows narrowing conversions, we will have an issue if we go from a 64 bit OS to a 32 bit OS with the conversion of int to double.
-
-A duble uses 64 bts total, but only has 53 bits for storing the actual number. This means that it can represet all the 32 bit ints, but no the 64 bit ints. Here again, a compiler would throw an error.
-
-To avoid this, we use static_cast<new_type>(value)

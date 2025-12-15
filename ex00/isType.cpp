@@ -19,7 +19,7 @@ bool isFloat(const char *input, t_result *r, char *end)
 		float floatTemp = std::strtof(input, &end);
 		if (end == input)
 		{
-			std::cout << "Conversion to float failed for given input"
+			std::cout << "Conversion to float failed for given input" << std::endl;
 		}
 		if (errno == ERANGE)
 		{
@@ -72,10 +72,9 @@ bool isDoule(const char *input, t_result *r, char *end)
 bool isInt(const char *input, t_result *r, char *end)
 {
 	long longTemp = std::strtol(input, &end, 10);
-	if ((errno == ERANGE && longTemp > std::numeric_limits<int>::max())
-   		|| (errno == ERANGE && longTemp < std::numeric_limits<int>::min()))
+	if (longTemp > std::numeric_limits<int>::max() || longTemp < std::numeric_limits<int>::min() || errno == ERANGE) // issue here as a long cannot be compared to an int
 	{
-		perror("strtol");
+		std::cout << "Error! The value is out of range." << '\n';
 		r->type = OUTOFRANGE;
 		return (false);
 	}
