@@ -34,14 +34,40 @@ We also need to treat the following cases:
 
 We had to convert it first to it's actual type (done through parsing) and then convert it explicitly to the three other data types.
 
-My strategy 
+My strategy: a structure containing an enum and a struct with the different types is used. 
+1. First I identify the type using the strtof, strtod, strtol functions. If they do not manage to convert to the value, the endptr will not be on '\0' as it did not manage to convert until the end. I use the errno to analyse whether or not the function encountered an ERANGE or EINVAL error and I treat these errors accordingly.
 
+If the conversion succeeded, then we set the type to the successful conversion and the corresponding value in the structure.
+2. Then I perform a switch case on the type of the converted type and send to an overloaded function convert which behaves according to the type receicved (char, int, double, float). This is where we use a static_cast<type>(value).
+3. Once the t_result structure is filled out, I send it to the overloaded operator who's behaviour is modified to output the converted types according to what the exercise wants.
+
+```cpp
+std::ostream& operator<<(std::ostream& os, t_result r);
+```
 
 ## Ex01
 
 In this excercise, we were asked to use another type of casting operator:
 
-**reinterpret_cast<type>(data)**
+**data_type *var_name = reinterpret_cast<date_type>(pointer_variable);**
+
+There is no return type, it simply converts to the pointer type and it only takes one parameter is the source pointer variable. 
+
+A reinterpret_cast is a type of casting operator used in C++ used to convert a pointer of some type to a pointer of another data type, even if the data types before and after conversion are different.
+
+```cpp
+    int* p = new int(65);
+    char* ch = reinterpret_cast<char*>(p);
+```
+
+- The reinterpret cast is a dangerous type of casting operator.
+- It can typecast a pointer into any other data type
+- It is used whrn we want to work with bits
+
+But the sentence which is the most important:
+
+2) A pointer can be converted to any integral type large enough to hold all values of its type (e.g. to std::uintptr_t).
+
 
 We had to write two static methods:
 ```cpp

@@ -1,6 +1,6 @@
 #include "Serializer.hpp"
 
-Serializer::Serializer() {};
+Serializer::Serializer() {}
 
 Serializer::Serializer(Serializer &other) { (void)other; }
 

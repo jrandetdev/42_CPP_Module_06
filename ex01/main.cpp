@@ -1,11 +1,12 @@
 #include "Serializer.hpp"
 #include <iostream>
 #include <string>
+#include <stdint.h>
 
 int main()
 {
-	Data *test;
-	Data *deserialized_ptr;
+	Data *test = NULL;
+	Data *deserialized_ptr = NULL;
 	std::cout << test << std::endl;
 	
 	deserialized_ptr = Serializer::deserialize(Serializer::serialize(test));
