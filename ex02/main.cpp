@@ -1,4 +1,11 @@
-#include "identify.hpp"
+#include "Base.hpp"
+#include "A.hpp"
+#include "B.hpp"
+#include "C.hpp"
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+#include <exception>
 
 int main()
 {

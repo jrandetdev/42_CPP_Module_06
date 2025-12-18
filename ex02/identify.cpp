@@ -1,4 +1,7 @@
-#include "identify.hpp"
+#include "Base.hpp"
+#include "A.hpp"
+#include "B.hpp"
+#include "C.hpp"
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
@@ -10,18 +13,10 @@ Base *generate(void)
 {
 	std::srand(std::time(0));
 	int random_value = (std::rand() % 3 + 1);
-	std::cout << random_value  << std::endl;
 	if (random_value <= 1)
-	{
-		std::cout << "returning A" << std::endl;
 		return (new A);
-	}
 	else if (1 <= random_value && random_value <= 2)
-	{
-		std::cout << "returning B" << std::endl;
 		return (new B);
-	}
-	std::cout << "returning C" << std::endl;
 	return (new C);
 }
 
@@ -46,22 +41,19 @@ Base *generate(void)
  */
 void	identify(Base *p)
 {
-	A* derivedA = dynamic_cast<A*>(p);
-	if (derivedA != NULL)
+	if (dynamic_cast<A*>(p))
 	{
 		std::cout << "The pointer is of type is A" << std::endl;
 		return ;
 	}
 
-	B* derivedB = dynamic_cast<B*>(p);
-	if (derivedB != NULL)
+	if (dynamic_cast<B*>(p))
 	{
 		std::cout << "The pointer is of type is B" << std::endl;
 		return ;
 	}
-
-	C* derivedC = dynamic_cast<C*>(p);
-	if (derivedC != NULL)
+	
+	if (dynamic_cast<C*>(p))
 	{
 		std::cout << "The pointer is of type is C" << std::endl;
 		return ;
@@ -69,7 +61,7 @@ void	identify(Base *p)
 }
 
 /**
- * @brief dynamic_casts can also be 
+ * @brief dynamic_casts can also be null
  * 
  * @param p 
  */
