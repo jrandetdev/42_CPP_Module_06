@@ -4,10 +4,10 @@
 #include <limits>
 #include <cstdlib>
 
-bool	isSpecialCase(char	*test)
+bool	isEmptyString(char	*test)
 {
-	std::string special_val(test);
-	if (special_val.empty())
+	std::string testInput(test);
+	if (testInput.empty())
 	{
 		std::cout << "Error! Argument cannot be an empty literal." << '\n';
 		return (true);
@@ -20,10 +20,10 @@ int main(int argc, char **argv)
 	if (argc != 2)
 	{
 		std::cout << "Error! The program does not accept " << (argc - 1) << " arguments. It accepts 1 argument." << '\n'
-			<< "Please input a literal (char, int, float, doble)" << std::endl;
+			<< "Please input a literal (char, int, float, double)" << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	if (isSpecialCase(argv[1]))
+	if (isEmptyString(argv[1]))
 		exit(EXIT_FAILURE);
 
 	t_result r;

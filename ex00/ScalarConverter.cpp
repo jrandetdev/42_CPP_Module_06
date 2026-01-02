@@ -41,7 +41,7 @@ t_result	ScalarConverter::convert(const char* input)
 			convertValues(&r, r.value.d);
 			break;
 		case(INVALID):
-			std::cout << RED << "\nError! Invalid literal type, cannot convert. Correct types needed:\n" \
+			std::cout << RED << "Error! Invalid literal type, cannot convert. Correct types needed:\n" \
 				"- char (./scalarconvert a)\n- int (decimal base)\n- double (4.2 for ex)\n" \
 				"- float (with '.' and f at end)" << RESET << std::endl;
 			break;
