@@ -113,10 +113,10 @@ std::ostream& operator<<(std::ostream& outstream, t_result r)
 	}
 	else
 	{
-		if (isprint(r.value.c))
+		if (r.type == CHAR)
 			outstream << "char:\t\'" << r.value.c << '\'' << '\n';
 		else
-			outstream << "char:\tNon displayable." << '\n';
+			outstream << "char:\tNon displayable" << '\n';
 		outstream << "int:\t" << r.value.i << '\n';
 	}
 	outstream << "double:\t" << std::fixed << std::setprecision(1) << r.value.d << '\n' \
