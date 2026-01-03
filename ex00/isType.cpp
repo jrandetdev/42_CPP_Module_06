@@ -30,7 +30,6 @@ bool isFloat(const char *input, t_result *r, char *end)
 		}
 		if (*end == 'f' && *(end + 1) == '\0')
 		{
-			std::cout << "the value is a float" << '\n';
 			r->type = FLOAT;
 			r->value.f = floatTemp;
 			return (true);
@@ -42,11 +41,10 @@ bool isFloat(const char *input, t_result *r, char *end)
 bool isNanOrInf(const char *input, t_result *r, char *end)
 {
 	float f_result = std::strtof(input, &end);
-	if (*end == 'f' && (std::isinf(f_result) || std::isnan(f_result)))
+	if (*end == 'f' && *(end + 1) == '\0' && (std::isinf(f_result) || std::isnan(f_result)))
 	{
 		r->type = FLOAT;
 		r->value.f = f_result;
-		std::cout << "the value is a nanf or inff" << '\n';
 		return (true);
 	}
 	double d_result = std::strtod(input, &end);
@@ -54,7 +52,6 @@ bool isNanOrInf(const char *input, t_result *r, char *end)
 	{
 		r->type = DOUBLE;
 		r->value.d = d_result;
-		std::cout << "the value is a nan or inf" << '\n';
 		return (true);
 	}
 	return (false);
@@ -74,7 +71,6 @@ bool isDoule(const char *input, t_result *r, char *end)
 		{
 			r->type = DOUBLE;
 			r->value.d = doubleTemp;
-			std::cout << "the value is a double" << '\n';
 			return (true);
 		}
 	}
