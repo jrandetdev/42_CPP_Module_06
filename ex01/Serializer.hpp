@@ -14,8 +14,8 @@ class Serializer
 {
 	private:
 		Serializer();
-		Serializer(Serializer &other);
-		Serializer& operator=(Serializer &other);
+		Serializer(const Serializer &other);
+		Serializer& operator=(const Serializer &other);
 		~Serializer();
 	public:
 		static	uintptr_t	serialize(Data *ptr); // takes a pointer and converts it to the unsigned int type uintptr_t
