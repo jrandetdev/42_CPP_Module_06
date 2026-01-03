@@ -82,8 +82,7 @@ bool isInt(const char *input, t_result *r, char *end)
 	long longTemp = std::strtol(input, &end, 10);
 	if (longTemp > std::numeric_limits<int>::max() || longTemp < std::numeric_limits<int>::min() || errno == ERANGE) // issue here as a long cannot be compared to an int
 	{
-		std::cout << "Error! Type conversion is impossible because value is out of range" << '\n';
-		r->type = OUTOFRANGE;
+		r->type = INVALID;
 		return (false);
 	}
 	if (*end == '\0')

@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 
 	t_result r;
 	r = ScalarConverter::convert(argv[1]);
-	if (r.type == INVALID || r.type == OUTOFRANGE)
+	if (r.type == INVALID)
 		exit(1);
 	std::cout << r << std::endl;
 	return (0);

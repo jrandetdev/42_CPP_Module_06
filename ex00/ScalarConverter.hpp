@@ -24,7 +24,7 @@
 #define BOLD    "\033[1m"
 #endif
 
-enum Type { CHAR, INT, DOUBLE, FLOAT, INVALID, OUTOFRANGE};
+enum Type { CHAR, INT, DOUBLE, FLOAT, INVALID};
 
 typedef struct	s_value
 {
