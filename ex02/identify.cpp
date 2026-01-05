@@ -23,9 +23,9 @@ Base *generate(void)
 /**
  * @brief dynamic_cast is a cast operator that converts data from one type to
  * another type at runtime. It is mainly used in inherited class hierarchies for
- * safely casting the base class pounter to reference to derived class (downcasting)
+ * safely casting the base class pointer to reference to derived class (downcasting)
  * 
- * upcasting is casgin from a derived class to one of its base classes (often implicit)
+ * upcasting is casting from a derived class to one of its base classes (often implicit)
  * - It is used when you deal with virtual dispatching : you have a pointer to Base from 
  * which you can access the common interface of a whole hierarchy of classes and the 
  * selection is done at runtime (example the base Animal * which then reffers to cats and dogs at runtime)
@@ -37,6 +37,8 @@ Base *generate(void)
  * The dynamic cast can onlz work when T1 and T2 are from the same hierarchy. 
  * The classes must be available through public derivation. The smallest part of 
  * the hierachy must be polynorphic and have at least one virtual functiopn./ 
+ * 
+ * You can safely check if a Base class pointer actually points to a derived class or not
  * @param p 
  */
 void	identify(Base *p)
@@ -61,7 +63,8 @@ void	identify(Base *p)
 }
 
 /**
- * @brief dynamic_casts can also be null
+ * @brief contrarily to the example above, we need to use a try catch block here because references
+ * cannot be null. 
  * 
  * @param p 
  */

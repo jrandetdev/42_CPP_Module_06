@@ -113,7 +113,7 @@ std::ostream& operator<<(std::ostream& outstream, t_result r)
 	}
 	else
 	{
-		if (r.type == CHAR)
+		if (isprint(r.value.c))
 			outstream << "char:\t\'" << r.value.c << '\'' << '\n';
 		else
 			outstream << "char:\tNon displayable" << '\n';

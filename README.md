@@ -18,11 +18,19 @@ Converting from a int from a smaller integer type or from a double to a float is
 
 Other conversions may not conserve all the value. Converting from a negative integer to an unsigned type results in the 2's complement bitwise representation (-1 becomes the largest value representable by the type, -2 the second largest etc (it loops around)).
 
-Convertimg from floating point to int means that there is a possible truncation of the value, meaning what is after the decimal is not kept. 
+Converting from floating point to int means that there is a possible truncation of the value, meaning what is after the decimal is not kept. 
 
 If the conversion is from int to int and float to float, it can not work in certain cases due to the OS and is implementation specific(not portable).
 
-If some of the data is lost, the compiler can issue a warning. This warning can be avoided if we cast using explicit casts. 
+If some of the data is lost, the compiler can issue a warning. the warning is issued if we use brace initialisation, making it a prefered way of initialising data so we avoid this type of error. This warning can be avoided if we cast using explicit casts, whereby the programmer takes full responsibility of the conversion.
+
+This is the case of the static_cast.
+
+```cpp
+static_cast<int>(input)
+```
+
+if the input is a double, no warning will be issued. 
 
 ## Ex00
 

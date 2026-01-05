@@ -17,7 +17,11 @@ Serializer::~Serializer() {}
  * integer types to pointer types and vice versa.
  * 
  * It garantees that if you cast a pointer to a different type and then reinterpret cast
- * it back to its original type, we will get the original value. 
+ * it back to its original type, we will get the original value.
+ * 
+ * It is used to convert a pointer of some data type into a pointer of another data type, even 
+ * if the types before and after conversion are different. It simplz converts the pointer type
+ * and does not return anything. 
  * 
  * @param ptr 
  * @return uintptr_t 
